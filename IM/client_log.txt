@@ -1,0 +1,36 @@
+2025-04-03 00:10:23,637 - IM-Client - INFO - Connected to server at 127.0.0.1:8888
+2025-04-03 00:10:50,303 - IM-Client - ERROR - Login timeout
+2025-04-03 00:11:15,762 - IM-Client - ERROR - Login timeout
+2025-04-03 00:11:38,789 - IM-Client - ERROR - Login timeout
+2025-04-03 00:11:45,374 - IM-Client - INFO - Connected to server at 127.0.0.1:8888
+2025-04-03 00:13:01,405 - IM-Client - INFO - Connected to server at 127.0.0.1:8888
+2025-04-03 00:13:23,455 - IM-Client - ERROR - Login timeout
+2025-04-03 00:16:24,187 - IM-Client - INFO - Connected to server at 127.0.0.1:8888
+2025-04-03 00:16:33,752 - IM-Client - INFO - Sending login request for user: bob
+2025-04-03 00:16:33,753 - IM-Client - INFO - Sent message: login
+2025-04-03 00:16:33,754 - IM-Client - INFO - Received message: login_response
+2025-04-03 00:16:33,754 - IM-Client - INFO - Login successful
+2025-04-03 00:16:33,754 - IM-Client - INFO - Successfully logged in as bob
+2025-04-03 00:25:16,330 - IM-Client - INFO - Sent message: unicast
+2025-04-03 00:25:16,333 - IM-Client - INFO - Received message: error
+2025-04-03 00:25:29,437 - IM-Client - INFO - Connected to server at 127.0.0.1:8888
+2025-04-03 00:25:40,073 - IM-Client - INFO - Sending login request for user: alice
+2025-04-03 00:25:40,074 - IM-Client - INFO - Sent message: login
+2025-04-03 00:25:40,075 - IM-Client - INFO - Received message: login_response
+2025-04-03 00:25:40,075 - IM-Client - INFO - Login successful
+2025-04-03 00:25:40,075 - IM-Client - INFO - Received message: user_status
+2025-04-03 00:25:40,075 - IM-Client - INFO - Successfully logged in as alice
+2025-04-03 00:26:10,779 - IM-Client - INFO - Sent message: unicast
+2025-04-03 00:26:10,779 - IM-Client - INFO - Received message: error
+2025-04-03 00:26:51,934 - IM-Client - INFO - Sent message: unicast
+2025-04-03 00:26:51,935 - IM-Client - INFO - Received message: error
+2025-04-03 00:28:23,439 - IM-Client - INFO - Sent message: unicast
+2025-04-03 00:28:23,440 - IM-Client - INFO - Received message: error
+2025-04-03 00:28:48,413 - IM-Client - INFO - Sent message: unicast
+2025-04-03 00:28:48,415 - IM-Client - INFO - Received message: error
+2025-04-03 00:28:52,214 - IM-Client - INFO - Sent message: unicast
+2025-04-03 00:28:52,215 - IM-Client - INFO - Received message: error
+2025-04-03 00:29:02,575 - IM-Client - INFO - Sent message: unicast
+2025-04-03 00:29:02,576 - IM-Client - INFO - Received message: unicast
+2025-04-03 00:29:19,221 - IM-Client - INFO - Sent message: broadcast
+2025-04-03 00:29:19,222 - IM-Client - INFO - Received message: broadcast

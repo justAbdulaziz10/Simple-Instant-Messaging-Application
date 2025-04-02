@@ -1,0 +1,58 @@
+2025-04-03 00:06:09,021 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:07:24,645 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:10:19,749 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:10:23,637 - IM-Server - INFO - New connection from ('127.0.0.1', 57195)
+2025-04-03 00:11:10,757 - IM-Server - INFO - Message from alice: login
+2025-04-03 00:11:33,784 - IM-Server - INFO - Message from alice: login
+2025-04-03 00:11:38,799 - IM-Server - ERROR - Error receiving message: [Errno 54] Connection reset by peer
+2025-04-03 00:11:38,800 - IM-Server - ERROR - Error processing message from alice: [Errno 54] Connection reset by peer
+2025-04-03 00:11:38,800 - IM-Server - INFO - Client alice disconnected
+2025-04-03 00:11:45,374 - IM-Server - INFO - New connection from ('127.0.0.1', 57198)
+2025-04-03 00:12:18,102 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:12:30,360 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:13:01,406 - IM-Server - INFO - New connection from ('127.0.0.1', 57212)
+2025-04-03 00:15:27,927 - IM-Server - ERROR - Error receiving message: [Errno 54] Connection reset by peer
+2025-04-03 00:15:27,927 - IM-Server - ERROR - Error processing message from alice: [Errno 54] Connection reset by peer
+2025-04-03 00:15:27,928 - IM-Server - INFO - Client alice disconnected
+2025-04-03 00:15:39,718 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:16:08,343 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:16:20,030 - IM-Server - INFO - Server started on 127.0.0.1:8888
+2025-04-03 00:16:24,187 - IM-Server - INFO - New connection from ('127.0.0.1', 57236)
+2025-04-03 00:16:24,187 - IM-Server - INFO - Waiting for authentication from ('127.0.0.1', 57236)
+2025-04-03 00:16:33,753 - IM-Server - INFO - Received message: login
+2025-04-03 00:16:33,753 - IM-Server - INFO - Login attempt from user: bob
+2025-04-03 00:16:33,753 - IM-Server - INFO - Authentication successful for bob
+2025-04-03 00:16:33,753 - IM-Server - INFO - Sending successful login response to bob
+2025-04-03 00:16:33,753 - IM-Server - INFO - Sent message: login_response
+2025-04-03 00:25:16,331 - IM-Server - INFO - Received message: unicast
+2025-04-03 00:25:16,332 - IM-Server - INFO - Message from bob: unicast
+2025-04-03 00:25:16,332 - IM-Server - INFO - Sent message: error
+2025-04-03 00:25:29,437 - IM-Server - INFO - New connection from ('127.0.0.1', 57260)
+2025-04-03 00:25:29,437 - IM-Server - INFO - Waiting for authentication from ('127.0.0.1', 57260)
+2025-04-03 00:25:40,074 - IM-Server - INFO - Received message: login
+2025-04-03 00:25:40,074 - IM-Server - INFO - Login attempt from user: alice
+2025-04-03 00:25:40,074 - IM-Server - INFO - Authentication successful for alice
+2025-04-03 00:25:40,074 - IM-Server - INFO - Sending successful login response to alice
+2025-04-03 00:25:40,075 - IM-Server - INFO - Sent message: login_response
+2025-04-03 00:25:40,075 - IM-Server - INFO - Sent message: user_status
+2025-04-03 00:26:10,779 - IM-Server - INFO - Received message: unicast
+2025-04-03 00:26:10,779 - IM-Server - INFO - Message from bob: unicast
+2025-04-03 00:26:10,779 - IM-Server - INFO - Sent message: error
+2025-04-03 00:26:51,934 - IM-Server - INFO - Received message: unicast
+2025-04-03 00:26:51,934 - IM-Server - INFO - Message from bob: unicast
+2025-04-03 00:26:51,934 - IM-Server - INFO - Sent message: error
+2025-04-03 00:28:23,439 - IM-Server - INFO - Received message: unicast
+2025-04-03 00:28:23,440 - IM-Server - INFO - Message from bob: unicast
+2025-04-03 00:28:23,440 - IM-Server - INFO - Sent message: error
+2025-04-03 00:28:48,413 - IM-Server - INFO - Received message: unicast
+2025-04-03 00:28:48,414 - IM-Server - INFO - Message from bob: unicast
+2025-04-03 00:28:48,414 - IM-Server - INFO - Sent message: error
+2025-04-03 00:28:52,214 - IM-Server - INFO - Received message: unicast
+2025-04-03 00:28:52,215 - IM-Server - INFO - Message from alice: unicast
+2025-04-03 00:28:52,215 - IM-Server - INFO - Sent message: error
+2025-04-03 00:29:02,575 - IM-Server - INFO - Received message: unicast
+2025-04-03 00:29:02,575 - IM-Server - INFO - Message from bob: unicast
+2025-04-03 00:29:02,576 - IM-Server - INFO - Sent message: unicast
+2025-04-03 00:29:19,222 - IM-Server - INFO - Received message: broadcast
+2025-04-03 00:29:19,222 - IM-Server - INFO - Message from bob: broadcast
+2025-04-03 00:29:19,222 - IM-Server - INFO - Sent message: broadcast
