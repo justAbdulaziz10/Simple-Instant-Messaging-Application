@@ -5,6 +5,8 @@ import time
 import logging
 import hashlib
 import os
+import base64
+from cryptography.fernet import Fernet
 
 # Configure logging
 logging.basicConfig(
@@ -24,7 +26,7 @@ class IMServer:
         self.port = port
         self.server_socket = None
         
-        # Dictionary to store active clients: {username: (socket, address)}
+        # Dictionary to store active clients: {username: (socket, address, encryption_key)}
         self.clients = {}
         
         # Dictionary to store user credentials: {username: hashed_password}
@@ -36,6 +38,13 @@ class IMServer:
         
         # Dictionary to store chat history: {username: [messages]}
         self.chat_history = {}
+        
+        # Dictionary to store client encryption keys: {username: encryption_key}
+        self.client_keys = {}
+        
+        # Server encryption key for secure storage
+        self.server_key = Fernet.generate_key()
+        self.cipher = Fernet(self.server_key)
         
         # Lock to protect shared resources
         self.lock = threading.RLock()
@@ -108,6 +117,9 @@ class IMServer:
                     # Successful authentication
                     logger.info(f"Authentication successful for {username}")
                     
+                    # Generate encryption key for this client
+                    client_key = Fernet.generate_key()
+                    
                     with self.lock:
                         # Check if user is already logged in
                         if username in self.clients:
@@ -117,16 +129,22 @@ class IMServer:
                             client_socket.close()
                             return
                         
-                        # Add the client to active clients
+                        # Add the client to active clients with encryption key
                         self.clients[username] = client_socket
+                        self.client_keys[username] = client_key
                         
                         # Initialize chat history if needed
                         if username not in self.chat_history:
                             self.chat_history[username] = []
                     
-                    # Send successful login response
+                    # Send successful login response with encryption key
                     logger.info(f"Sending successful login response to {username}")
-                    response = {'type': 'login_response', 'status': 'success', 'message': 'Authentication successful'}
+                    response = {
+                        'type': 'login_response', 
+                        'status': 'success', 
+                        'message': 'Authentication successful',
+                        'encryption_key': client_key.decode('utf-8')
+                    }
                     self._send_message(client_socket, response)
                     
                     # Broadcast user online status
@@ -155,6 +173,8 @@ class IMServer:
             if username and username in self.clients:
                 with self.lock:
                     del self.clients[username]
+                    if username in self.client_keys:
+                        del self.client_keys[username]
                 
                 # Broadcast user offline status
                 self._broadcast_user_status(username, "offline")
@@ -220,22 +240,57 @@ class IMServer:
             if recipient in self.clients:
                 recipient_socket = self.clients[recipient]
                 
-                # Send the message to the recipient
-                try:
-                    self._send_message(recipient_socket, message)
-                    
-                    # Store in chat history
-                    if recipient not in self.chat_history:
-                        self.chat_history[recipient] = []
-                    self.chat_history[recipient].append(message)
-                    
-                    # Store in sender's history as well
-                    sender = message.get('sender')
-                    if sender and sender in self.chat_history:
-                        self.chat_history[sender].append(message)
-                    
-                except Exception as e:
-                    logger.error(f"Error sending unicast message to {recipient}: {e}")
+                # Get encryption keys
+                sender = message.get('sender')
+                sender_key = self.client_keys.get(sender)
+                recipient_key = self.client_keys.get(recipient)
+                
+                if not sender_key or not recipient_key:
+                    logger.error(f"Missing encryption keys for {sender} or {recipient}")
+                    return
+                
+                # Encrypt the message content if it's not already encrypted
+                if 'encrypted' not in message and 'content' in message:
+                    try:
+                        # Create a copy of the message to modify
+                        encrypted_message = message.copy()
+                        
+                        # Encrypt the content with recipient's key
+                        content = message['content']
+                        if isinstance(content, str):
+                            content = content.encode('utf-8')
+                        
+                        recipient_cipher = Fernet(recipient_key)
+                        encrypted_content = recipient_cipher.encrypt(content)
+                        
+                        # Replace the content with encrypted content
+                        encrypted_message['content'] = encrypted_content.decode('utf-8')
+                        encrypted_message['encrypted'] = True
+                        
+                        # Send the encrypted message
+                        self._send_message(recipient_socket, encrypted_message)
+                        
+                        # Store in chat history (encrypted with server key for security)
+                        if recipient not in self.chat_history:
+                            self.chat_history[recipient] = []
+                        
+                        # Store original message in history
+                        self.chat_history[recipient].append(message)
+                        
+                        # Store in sender's history as well
+                        if sender and sender in self.chat_history:
+                            self.chat_history[sender].append(message)
+                        
+                    except Exception as e:
+                        logger.error(f"Error encrypting and sending unicast message to {recipient}: {e}")
+                        import traceback
+                        logger.error(traceback.format_exc())
+                else:
+                    # Message is already encrypted or has no content, send as is
+                    try:
+                        self._send_message(recipient_socket, message)
+                    except Exception as e:
+                        logger.error(f"Error sending unicast message to {recipient}: {e}")
             else:
                 # Recipient is not online, send error to sender
                 error_msg = {
