@@ -5,6 +5,8 @@ import time
 import os
 import sys
 import logging
+import base64
+from cryptography.fernet import Fernet
 
 # Configure logging
 logging.basicConfig(
@@ -26,6 +28,11 @@ class IMClient:
         self.username = None
         self.running = False
         self.receiver_thread = None
+        
+        # Encryption settings
+        self.encryption_key = None
+        self.cipher = None
+        self.encryption_enabled = True
         
         # Event to signal successful login
         self.login_event = threading.Event()
@@ -136,11 +143,16 @@ class IMClient:
                 'timestamp': time.strftime("%Y-%m-%d %H:%M:%S")
             }
             
+            # Let the server handle encryption - this keeps the code simpler
+            # as the server knows which keys to use for each recipient
+            
             self._send_message(message)
             return True
         
         except Exception as e:
             logger.error(f"Error sending unicast message: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
             return False
 
     def send_multicast(self, recipients, content):
@@ -300,6 +312,21 @@ class IMClient:
         
         if status == 'success':
             logger.info("Login successful")
+            
+            # If the server provided an encryption key, store it
+            if 'encryption_key' in message:
+                try:
+                    encryption_key = message.get('encryption_key')
+                    if isinstance(encryption_key, str):
+                        encryption_key = encryption_key.encode('utf-8')
+                    
+                    self.encryption_key = encryption_key
+                    self.cipher = Fernet(self.encryption_key)
+                    logger.info("Encryption enabled with server-provided key")
+                except Exception as e:
+                    logger.error(f"Error setting up encryption: {e}")
+                    self.encryption_enabled = False
+            
             # Set the login event to unblock the login method
             self.login_event.set()
         else:
@@ -470,6 +497,23 @@ class IMClientCLI:
     def _handle_message(self, message):
         """Handle incoming messages from the server"""
         msg_type = message.get('type', '')
+        
+        # Check if the message is encrypted and we have a cipher
+        if message.get('encrypted') and self.cipher and 'content' in message:
+            try:
+                # Decrypt the message content
+                encrypted_content = message.get('content', '')
+                if isinstance(encrypted_content, str):
+                    encrypted_content = encrypted_content.encode('utf-8')
+                
+                decrypted_content = self.cipher.decrypt(encrypted_content).decode('utf-8')
+                
+                # Replace the encrypted content with decrypted content
+                message['content'] = decrypted_content
+                message['encrypted'] = False
+            except Exception as e:
+                logger.error(f"Error decrypting message: {e}")
+                # If decryption fails, we'll display the message as is
         
         if msg_type == 'unicast':
             sender = message.get('sender', 'Unknown')
