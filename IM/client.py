@@ -497,30 +497,30 @@ class IMClientCLI:
     def _handle_message(self, message):
         """Handle incoming messages from the server"""
         msg_type = message.get('type', '')
-        
+    
         # Check if the message is encrypted and we have a cipher
-        if message.get('encrypted') and self.cipher and 'content' in message:
+        if message.get('encrypted') and self.client.cipher and 'content' in message:
             try:
-                # Decrypt the message content
+            # Decrypt the message content
                 encrypted_content = message.get('content', '')
                 if isinstance(encrypted_content, str):
                     encrypted_content = encrypted_content.encode('utf-8')
-                
-                decrypted_content = self.cipher.decrypt(encrypted_content).decode('utf-8')
-                
-                # Replace the encrypted content with decrypted content
+            
+                decrypted_content = self.client.cipher.decrypt(encrypted_content).decode('utf-8')
+            
+            # Replace the encrypted content with decrypted content
                 message['content'] = decrypted_content
                 message['encrypted'] = False
             except Exception as e:
                 logger.error(f"Error decrypting message: {e}")
-                # If decryption fails, we'll display the message as is
-        
+            # If decryption fails, we'll display the message as is
+
         if msg_type == 'unicast':
             sender = message.get('sender', 'Unknown')
             content = message.get('content', '')
             timestamp = message.get('timestamp', '')
             print(f"\n[{timestamp}] {sender} (private): {content}")
-        
+    
         elif msg_type == 'multicast':
             sender = message.get('sender', 'Unknown')
             content = message.get('content', '')
@@ -528,18 +528,18 @@ class IMClientCLI:
             recipients = message.get('recipients', [])
             if self.client.username in recipients:
                 print(f"\n[{timestamp}] {sender} (group): {content}")
-        
+    
         elif msg_type == 'broadcast':
             sender = message.get('sender', 'Unknown')
             content = message.get('content', '')
             timestamp = message.get('timestamp', '')
             print(f"\n[{timestamp}] {sender} (broadcast): {content}")
-        
+    
         elif msg_type == 'user_status':
             username = message.get('username', '')
             status = message.get('status', '')
             print(f"\n--- User {username} is now {status} ---")
-        
+    
         elif msg_type == 'user_list':
             users = message.get('users', [])
             print("\n=== Online Users ===")
@@ -548,15 +548,15 @@ class IMClientCLI:
                     print(f"- {user}")
             else:
                 print("No users online")
-        
+    
         elif msg_type == 'error':
             error_msg = message.get('message', 'Unknown error')
             print(f"\nError: {error_msg}")
-        
+    
         else:
             print(f"\nReceived unknown message type: {msg_type}")
-        
-        # Refresh the prompt
+
+    # Refresh the prompt
         print("\n> ", end='', flush=True)
 
 
